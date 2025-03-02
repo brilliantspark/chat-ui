@@ -47,9 +47,13 @@ export async function POST(request: Request) {
 
      // 提取有效的消息内容
     const messageContent = response.data.choices[0].message.content
-    return new Response(JSON.stringify({ content: messageContent }), {
-      headers: { "Content-Type": "application/json" }
+    return new Response(messageContent, {
+      headers: { "Content-Type": "text/plain" }
     })
+    
+    //return new Response(JSON.stringify({ content: messageContent }), {
+    //  headers: { "Content-Type": "application/json" }
+    //})
     //return new Response(JSON.stringify(response.data), {
     //headers: { "Content-Type": "application/json" }
    // })
