@@ -48,7 +48,7 @@ export async function POST(request: Request) {
     // return new Response(JSON.stringify(response.data), {
     //   headers: { "Content-Type": "application/json" }
     // })
-    const stream = OpenAIStream(response)
+    const stream = OpenAIStream(response.data)
 
     return new StreamingTextResponse(stream)
   } catch (error: any) {
