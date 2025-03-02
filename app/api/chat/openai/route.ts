@@ -2,6 +2,8 @@ import { checkApiKey, getServerProfile } from "@/lib/server/server-chat-helpers"
 import { ChatSettings } from "@/types"
 import { ServerRuntime } from "next"
 import axios from "axios"
+import { ChatCompletionCreateParamsBase } from "openai/resources/chat/completions.mjs"
+import { OpenAIStream, StreamingTextResponse } from "ai"
 
 export const runtime: ServerRuntime = "edge"
 
@@ -24,10 +26,7 @@ export async function POST(request: Request) {
       apiUrl,
       {
         model: "gpt-4o",
-        messages: [
-          { role: "system", content: "You are a helpful assistant." },
-          { role: "user", content: "Say Hi" }
-        ],
+        messages: messages as ChatCompletionCreateParamsBase["messages"],
         temperature: chatSettings.temperature,
         max_tokens:
           chatSettings.model === "gpt-4-vision-preview" ||
@@ -44,10 +43,14 @@ export async function POST(request: Request) {
       }
     )
    
-    console.log( "执行了" + response.data)
-    return new Response(JSON.stringify(response.data), {
-      headers: { "Content-Type": "application/json" }
-    })
+    console.log( "执行了")
+
+    // return new Response(JSON.stringify(response.data), {
+    //   headers: { "Content-Type": "application/json" }
+    // })
+    const stream = OpenAIStream(response)
+
+    return new StreamingTextResponse(stream)
   } catch (error: any) {
     let errorMessage = error.message || "An unexpected error occurred"
     const errorCode = error.response?.status || 500
