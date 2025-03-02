@@ -45,12 +45,12 @@ export async function POST(request: Request) {
    
     console.log( "执行了")
 
-    // return new Response(JSON.stringify(response.data), {
-    //   headers: { "Content-Type": "application/json" }
-    // })
-    const stream = OpenAIStream(response.data)
+    return new Response(JSON.stringify(response.data), {
+    headers: { "Content-Type": "application/json" }
+    })
+    //const stream = OpenAIStream(response.data)
 
-    return new StreamingTextResponse(stream)
+    //return new StreamingTextResponse(stream)
   } catch (error: any) {
     let errorMessage = error.message || "An unexpected error occurred"
     const errorCode = error.response?.status || 500
